@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,4 +11,37 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
+}
+
+/* Material Icons Styles */
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  vertical-align: middle;
+}
+
+/* Colors for specific status indicators */
+.material-icons.text-success {
+  color: #22c55e;
+}
+
+.material-icons.text-warning {
+  color: #f59e0b;
+}
+
+.material-icons.text-error {
+  color: #ef4444;
+}
+
+.material-icons.text-sm {
+  font-size: 18px;
 }

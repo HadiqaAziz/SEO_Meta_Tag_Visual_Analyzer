@@ -21,7 +21,14 @@ function ScoreCard({ title, score }: ScoreCardProps) {
   return (
     <div className="bg-slate-50 rounded-md p-4 border border-slate-200 flex items-center">
       <div className={`w-14 h-14 rounded-full flex items-center justify-center mr-3 ${scoreToIconClass(score)}`}>
-        <span className="material-icons">{scoreToIcon(score)}</span>
+        <motion.span 
+          className="material-icons"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+        >
+          {scoreToIcon(score)}
+        </motion.span>
       </div>
       <div>
         <div className="text-sm text-slate-500">{title}</div>
