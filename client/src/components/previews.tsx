@@ -11,11 +11,17 @@ export default function Previews({ result }: PreviewsProps) {
   const googleDesc = result.description || "No description found";
   const googleUrl = formatPathForDisplay(result.url);
   
-  const ogTitle = result.ogTitle || result.title || "No title found";
-  const ogDesc = result.ogDescription || result.description || "No description found";
-  const ogImage = result.ogImage || "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d";
+  // Default image for previews (only used if no image is found)
+  const defaultImage = "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d";
+  
   const websiteDomain = new URL(result.url).hostname;
   
+  // Get OpenGraph data with fallbacks
+  const ogTitle = result.ogTitle || result.title || "No title found";
+  const ogDesc = result.ogDescription || result.description || "No description found";
+  const ogImage = result.ogImage || defaultImage;
+  
+  // Get Twitter data with fallbacks
   const twitterTitle = result.twitterTitle || result.ogTitle || result.title;
   const twitterDesc = result.twitterDescription || result.ogDescription || result.description;
   const twitterImage = result.twitterImage || result.ogImage;
@@ -76,6 +82,11 @@ export default function Previews({ result }: PreviewsProps) {
                     src={ogImage} 
                     alt="Facebook preview image" 
                     className="w-full h-52 object-cover"
+                    onError={(e) => {
+                      // If image fails to load, replace with placeholder
+                      e.currentTarget.onerror = null; // Prevent infinite callbacks
+                      e.currentTarget.src = defaultImage;
+                    }}
                   />
                 ) : (
                   <div className="w-full h-52 bg-gray-200 flex items-center justify-center text-gray-400">
