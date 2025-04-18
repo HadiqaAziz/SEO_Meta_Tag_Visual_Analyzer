@@ -127,9 +127,17 @@ const SEOScoreGraph: React.FC<SEOScoreGraphProps> = ({ result }) => {
   const animatedArcPath = (value: number, startAngle: number, endAngle: number, color: string, delay: number) => {
     // Scale value from 0-100 to 0-(endAngle-startAngle)
     const angleRange = endAngle - startAngle;
+    const scaledValue = value * angleRange / 100;
     
-    // Animated path
+    // Calculate start and end points properly
     const start = polarToCartesian(center, center, radius, startAngle);
+    const end = polarToCartesian(center, center, radius, startAngle + scaledValue);
+    
+    // Define the large arc flag based on the angle
+    const largeArcFlag = scaledValue > 180 ? 1 : 0;
+    
+    // Create full path for proper animation
+    const pathData = `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x} ${end.y}`;
     
     // Animation variants for path drawing
     const variants = {
@@ -138,7 +146,7 @@ const SEOScoreGraph: React.FC<SEOScoreGraphProps> = ({ result }) => {
         opacity: 0,
       },
       visible: {
-        pathLength: value / 100,
+        pathLength: 1,
         opacity: 1,
         transition: {
           pathLength: { type: "spring", duration: 1.5, bounce: 0, delay },
@@ -149,7 +157,7 @@ const SEOScoreGraph: React.FC<SEOScoreGraphProps> = ({ result }) => {
 
     return (
       <motion.path 
-        d={`M ${start.x} ${start.y} A ${radius} ${radius} 0 0 1 ${start.x + radius} ${start.y + radius}`}
+        d={pathData}
         stroke={color}
         strokeWidth={strokeWidth}
         fill="none"

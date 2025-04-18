@@ -6,6 +6,7 @@ import { RefreshCw } from "lucide-react";
 import { formatUrl } from "@/lib/seo-utils";
 import { scoreToIconClass, scoreToIcon, scoreToString } from "@/lib/seo-utils";
 import SEOScoreGraph from "./seo-score-graph";
+import { motion } from "framer-motion";
 
 interface SummaryScoreProps {
   result: AnalyzedSite;
