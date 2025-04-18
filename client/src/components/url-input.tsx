@@ -142,11 +142,6 @@ export default function URLInput({ onAnalyze, isLoading }: URLInputProps) {
                                 className="pl-12 py-6 text-lg rounded-lg shadow-md border-slate-300 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
                                 onFocus={() => setIsFocused(true)}
                                 {...field}
-                                onBlur={(e) => {
-                                  field.onBlur(e);
-                                  // Delay to allow clicking on suggestions
-                                  setTimeout(() => setIsFocused(false), 200);
-                                }}
                               />
                               
                               {hasValue && (
@@ -176,6 +171,10 @@ export default function URLInput({ onAnalyze, isLoading }: URLInputProps) {
                                 animate="visible"
                                 exit="exit"
                                 variants={popInVariants}
+                                onMouseDown={(e) => {
+                                  // Prevent blur event on input when clicking the dropdown
+                                  e.preventDefault();
+                                }}
                               >
                                 {recentlyAnalyzed.length > 0 && (
                                   <div className="p-2">
