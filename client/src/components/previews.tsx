@@ -64,10 +64,10 @@ export default function Previews({ result }: PreviewsProps) {
           {result.scoreTitle === "excellent" && result.scoreDescription === "excellent" ? (
             <div className="flex items-center">
               <motion.span 
-                className="material-icons text-success mr-2"
+                className="material-icons text-green-500 mr-2"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.3, type: "spring" }}
+                transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 15 }}
               >
                 check_circle
               </motion.span>
@@ -162,10 +162,10 @@ export default function Previews({ result }: PreviewsProps) {
           {result.scoreOpenGraph === "excellent" ? (
             <div className="flex items-center">
               <motion.span 
-                className="material-icons text-success mr-2"
+                className="material-icons text-green-500 mr-2"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.3, type: "spring" }}
+                transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 15 }}
               >
                 check_circle
               </motion.span>
@@ -289,10 +289,10 @@ export default function Previews({ result }: PreviewsProps) {
           {result.scoreTwitter === "excellent" ? (
             <div className="flex items-center">
               <motion.span 
-                className="material-icons text-success mr-2"
+                className="material-icons text-green-500 mr-2"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.3, type: "spring" }}
+                transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 15 }}
               >
                 check_circle
               </motion.span>
