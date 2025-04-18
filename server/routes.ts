@@ -31,8 +31,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      // Fetch the webpage HTML
-      const response = await fetch(url);
+      // Fetch the webpage HTML with proper headers to avoid being blocked
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Referer': 'https://www.google.com/'
+        },
+        redirect: 'follow',
+      });
+      
       if (!response.ok) {
         return res.status(400).json({ 
           message: `Failed to fetch URL: ${response.status} ${response.statusText}` 
@@ -103,26 +112,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
 function analyzeHtml(html: string, url: string) {
   const $ = cheerio.load(html);
   
+  // Helper function to resolve relative URLs
+  const resolveUrl = (relativeUrl: string | undefined): string | undefined => {
+    if (!relativeUrl) return undefined;
+    try {
+      // Check if it's already an absolute URL
+      if (relativeUrl.startsWith('http://') || relativeUrl.startsWith('https://')) {
+        return relativeUrl;
+      }
+      
+      // Resolve relative URL against base URL
+      const baseUrl = new URL(url);
+      if (relativeUrl.startsWith('/')) {
+        return `${baseUrl.protocol}//${baseUrl.host}${relativeUrl}`;
+      } else {
+        // Handle relative path without leading slash
+        const path = baseUrl.pathname.endsWith('/') 
+          ? baseUrl.pathname 
+          : baseUrl.pathname.substring(0, baseUrl.pathname.lastIndexOf('/') + 1);
+        return `${baseUrl.protocol}//${baseUrl.host}${path}${relativeUrl}`;
+      }
+    } catch (e) {
+      console.error("Error resolving URL:", e);
+      return relativeUrl;
+    }
+  };
+  
+  // Get image from multiple potential sources
+  const getFirstAvailableImage = (): string | undefined => {
+    // Try Open Graph image
+    const ogImage = $('meta[property="og:image"]').attr('content') || 
+                    $('meta[property="og:image:url"]').attr('content');
+    if (ogImage) return resolveUrl(ogImage);
+    
+    // Try Twitter image
+    const twitterImage = $('meta[name="twitter:image"]').attr('content') ||
+                        $('meta[name="twitter:image:src"]').attr('content');
+    if (twitterImage) return resolveUrl(twitterImage);
+    
+    // Try looking for a featured image or first image
+    const firstImg = $('img[class*="featured"], article img, .post img, .content img').first().attr('src');
+    if (firstImg) return resolveUrl(firstImg);
+    
+    // Last resort: first image on the page
+    const anyImg = $('img').first().attr('src');
+    if (anyImg) return resolveUrl(anyImg);
+    
+    return undefined;
+  };
+
+  // Get title from multiple sources
+  const getTitle = (): string => {
+    return $('title').text().trim() || 
+           $('h1').first().text().trim() || 
+           'No title found';
+  };
+  
+  // Get description from multiple sources
+  const getDescription = (): string | undefined => {
+    return $('meta[name="description"]').attr('content') ||
+           $('meta[property="og:description"]').attr('content') ||
+           $('meta[name="twitter:description"]').attr('content');
+  };
+  
+  // Get canonical URL
+  const getCanonical = (): string | undefined => {
+    return $('link[rel="canonical"]').attr('href') ||
+           $('meta[property="og:url"]').attr('content');
+  };
+  
   // Extract meta information
+  const title = getTitle();
+  const description = getDescription();
+  const titleLength = title ? title.length : 0;
+  const descLength = description ? description.length : 0;
+  
+  // Main image for previews (resolved to absolute URL)
+  const mainImage = getFirstAvailableImage();
+  
   const result: any = {
     title: {
-      content: $('title').text().trim(),
-      length: $('title').text().trim().length,
+      content: title,
+      length: titleLength,
       score: "missing"
     },
     description: {
-      content: $('meta[name="description"]').attr('content'),
-      length: $('meta[name="description"]').attr('content')?.length || 0,
+      content: description,
+      length: descLength,
       score: "missing"
     },
     canonical: {
-      content: $('link[rel="canonical"]').attr('href'),
+      content: getCanonical(),
       score: "missing"
     },
     openGraph: {
       title: $('meta[property="og:title"]').attr('content'),
       description: $('meta[property="og:description"]').attr('content'),
-      image: $('meta[property="og:image"]').attr('content'),
+      image: resolveUrl($('meta[property="og:image"]').attr('content')),
       url: $('meta[property="og:url"]').attr('content'),
       type: $('meta[property="og:type"]').attr('content'),
       siteName: $('meta[property="og:site_name"]').attr('content'),
@@ -132,11 +218,21 @@ function analyzeHtml(html: string, url: string) {
       card: $('meta[name="twitter:card"]').attr('content'),
       title: $('meta[name="twitter:title"]').attr('content'),
       description: $('meta[name="twitter:description"]').attr('content'),
-      image: $('meta[name="twitter:image"]').attr('content'),
+      image: resolveUrl($('meta[name="twitter:image"]').attr('content') || $('meta[name="twitter:image:src"]').attr('content')),
       score: "missing"
     },
     other: []
   };
+  
+  // If Open Graph image is missing but we found an image elsewhere, use it
+  if (!result.openGraph.image && mainImage) {
+    result.openGraph.image = mainImage;
+  }
+  
+  // If Twitter image is missing but we have OG or another image, use it
+  if (!result.twitter.image) {
+    result.twitter.image = result.openGraph.image || mainImage;
+  }
   
   // Add other meta tags
   $('meta').each((i, elem) => {
