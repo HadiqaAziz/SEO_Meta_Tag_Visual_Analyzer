@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AnalyzedSite } from "@shared/schema";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Code, AlertTriangle, Lightbulb, Eye } from "lucide-react";
+import { Code, AlertTriangle, Lightbulb, Eye, BarChart2, CircleCheck, ArrowRight } from "lucide-react";
 import Previews from "./previews";
 import MetaTags from "./meta-tags";
 import Issues from "./issues";
 import Recommendations from "./recommendations";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ResultTabsProps {
   result: AnalyzedSite;
