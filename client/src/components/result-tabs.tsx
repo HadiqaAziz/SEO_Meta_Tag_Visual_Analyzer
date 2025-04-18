@@ -18,37 +18,37 @@ export default function ResultTabs({ result }: ResultTabsProps) {
   const issueCount = issues.length;
 
   return (
-    <Card className="mb-8 overflow-hidden">
+    <Card className="mb-8 overflow-hidden shadow-md">
       <Tabs defaultValue="previews">
-        <div className="border-b border-slate-200">
-          <TabsList className="h-auto bg-transparent w-full justify-start border-b-0 p-0">
+        <div className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
+          <TabsList className="h-auto bg-transparent w-full justify-start border-b-0 p-2">
             <TabsTrigger 
               value="previews" 
-              className="text-sm sm:text-base flex-grow sm:flex-grow-0 data-[state=active]:text-primary data-[state=active]:border-primary py-4 px-4 sm:px-8 border-b-2 data-[state=active]:border-b-2 data-[state=inactive]:border-transparent rounded-none text-center"
+              className="text-sm sm:text-base flex-grow sm:flex-grow-0 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm py-3 px-4 sm:px-6 rounded-md transition-all duration-200 text-center mr-1"
             >
-              <div className="flex items-center">
-                <Eye className="h-4 w-4 mr-1" />
-                Previews
+              <div className="flex items-center justify-center">
+                <Eye className="h-4 w-4 mr-2" />
+                <span className="font-medium">Previews</span>
               </div>
             </TabsTrigger>
             <TabsTrigger 
               value="metatags" 
-              className="text-sm sm:text-base flex-grow sm:flex-grow-0 data-[state=active]:text-primary data-[state=active]:border-primary py-4 px-4 sm:px-8 border-b-2 data-[state=active]:border-b-2 data-[state=inactive]:border-transparent rounded-none text-center"
+              className="text-sm sm:text-base flex-grow sm:flex-grow-0 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm py-3 px-4 sm:px-6 rounded-md transition-all duration-200 text-center mr-1"
             >
-              <div className="flex items-center">
-                <Code className="h-4 w-4 mr-1" />
-                Meta Tags
+              <div className="flex items-center justify-center">
+                <Code className="h-4 w-4 mr-2" />
+                <span className="font-medium">Meta Tags</span>
               </div>
             </TabsTrigger>
             <TabsTrigger 
               value="issues" 
-              className="text-sm sm:text-base flex-grow sm:flex-grow-0 data-[state=active]:text-primary data-[state=active]:border-primary py-4 px-4 sm:px-8 border-b-2 data-[state=active]:border-b-2 data-[state=inactive]:border-transparent rounded-none text-center"
+              className="text-sm sm:text-base flex-grow sm:flex-grow-0 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm py-3 px-4 sm:px-6 rounded-md transition-all duration-200 text-center mr-1"
             >
-              <div className="flex items-center">
-                <AlertTriangle className="h-4 w-4 mr-1" />
-                Issues
+              <div className="flex items-center justify-center">
+                <AlertTriangle className="h-4 w-4 mr-2" />
+                <span className="font-medium">Issues</span>
                 {issueCount > 0 && (
-                  <span className="ml-1 bg-error text-white text-xs py-0.5 px-2 rounded-full">
+                  <span className="ml-2 bg-red-500 text-white text-xs py-0.5 px-2 rounded-full font-bold">
                     {issueCount}
                   </span>
                 )}
@@ -56,29 +56,29 @@ export default function ResultTabs({ result }: ResultTabsProps) {
             </TabsTrigger>
             <TabsTrigger 
               value="recommendations" 
-              className="text-sm sm:text-base flex-grow sm:flex-grow-0 data-[state=active]:text-primary data-[state=active]:border-primary py-4 px-4 sm:px-8 border-b-2 data-[state=active]:border-b-2 data-[state=inactive]:border-transparent rounded-none text-center"
+              className="text-sm sm:text-base flex-grow sm:flex-grow-0 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm py-3 px-4 sm:px-6 rounded-md transition-all duration-200 text-center"
             >
-              <div className="flex items-center">
-                <Lightbulb className="h-4 w-4 mr-1" />
-                Recommendations
+              <div className="flex items-center justify-center">
+                <Lightbulb className="h-4 w-4 mr-2" />
+                <span className="font-medium">Recommendations</span>
               </div>
             </TabsTrigger>
           </TabsList>
         </div>
         
-        <TabsContent value="previews" className="p-6 mt-0">
+        <TabsContent value="previews" className="p-6 mt-0 bg-white">
           <Previews result={result} />
         </TabsContent>
         
-        <TabsContent value="metatags" className="p-6 mt-0">
+        <TabsContent value="metatags" className="p-6 mt-0 bg-white">
           <MetaTags result={result} />
         </TabsContent>
         
-        <TabsContent value="issues" className="p-6 mt-0">
+        <TabsContent value="issues" className="p-6 mt-0 bg-white">
           <Issues result={result} />
         </TabsContent>
         
-        <TabsContent value="recommendations" className="p-6 mt-0">
+        <TabsContent value="recommendations" className="p-6 mt-0 bg-white">
           <Recommendations result={result} />
         </TabsContent>
       </Tabs>

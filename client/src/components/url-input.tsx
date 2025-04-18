@@ -36,14 +36,20 @@ export default function URLInput({ onAnalyze, isLoading }: URLInputProps) {
   };
 
   return (
-    <Card className="mb-8">
-      <CardContent className="p-6">
+    <Card className="mb-8 shadow-md">
+      <CardContent className="p-8">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-2">
+            SEO Analyzer
+          </h2>
+          <p className="text-slate-600">
+            Enter any website URL to analyze its SEO meta tags and preview social media appearance
+          </p>
+        </div>
+        
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="urlInput" className="block text-sm font-medium text-slate-700">
-                Website URL to analyze
-              </label>
+            <div className="space-y-4 max-w-3xl mx-auto">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-grow relative">
                   <FormField
@@ -53,25 +59,26 @@ export default function URLInput({ onAnalyze, isLoading }: URLInputProps) {
                       <FormItem className="w-full">
                         <FormControl>
                           <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                              <LinkIcon className="h-5 w-5 text-slate-400" />
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                              <LinkIcon className="h-5 w-5 text-primary" />
                             </div>
                             <Input
                               id="urlInput"
                               placeholder="https://example.com"
-                              className="pl-10 py-3"
+                              className="pl-12 py-6 text-lg rounded-lg shadow-sm border-slate-300 focus:border-primary"
                               {...field}
                             />
                           </div>
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-center mt-2" />
                       </FormItem>
                     )}
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="bg-primary hover:bg-primary-dark py-3 px-6 rounded-md transition-colors min-w-[150px]"
+                  size="lg"
+                  className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 py-6 px-8 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg min-w-[150px] text-lg font-medium"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -87,9 +94,11 @@ export default function URLInput({ onAnalyze, isLoading }: URLInputProps) {
                   )}
                 </Button>
               </div>
-              <p className="text-xs text-slate-500">
-                Enter the full URL including https:// (example: https://www.example.com)
-              </p>
+              <div className="flex justify-center">
+                <p className="text-sm text-slate-500 max-w-lg text-center">
+                  Enter the full URL including https:// to analyze meta tags, social media previews, and get SEO recommendations
+                </p>
+              </div>
             </div>
           </form>
         </Form>

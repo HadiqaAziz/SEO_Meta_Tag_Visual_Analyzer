@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { formatUrl } from "@/lib/seo-utils";
 import { scoreToIconClass, scoreToIcon, scoreToString } from "@/lib/seo-utils";
+import SEOScoreGraph from "./seo-score-graph";
 
 interface SummaryScoreProps {
   result: AnalyzedSite;
@@ -56,23 +57,31 @@ export default function SummaryScore({ result, onReanalyze }: SummaryScoreProps)
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <ScoreCard 
-            title="Title Tag" 
-            score={result.scoreTitle as ScoreType} 
-          />
-          <ScoreCard 
-            title="Meta Description" 
-            score={result.scoreDescription as ScoreType} 
-          />
-          <ScoreCard 
-            title="Open Graph" 
-            score={result.scoreOpenGraph as ScoreType} 
-          />
-          <ScoreCard 
-            title="Twitter Cards" 
-            score={result.scoreTwitter as ScoreType} 
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          {/* SEO Score Graph */}
+          <div className="lg:col-span-2 flex justify-center items-center bg-white p-4 rounded-lg">
+            <SEOScoreGraph result={result} />
+          </div>
+          
+          {/* Score Cards */}
+          <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <ScoreCard 
+              title="Title Tag" 
+              score={result.scoreTitle as ScoreType} 
+            />
+            <ScoreCard 
+              title="Meta Description" 
+              score={result.scoreDescription as ScoreType} 
+            />
+            <ScoreCard 
+              title="Open Graph" 
+              score={result.scoreOpenGraph as ScoreType} 
+            />
+            <ScoreCard 
+              title="Twitter Cards" 
+              score={result.scoreTwitter as ScoreType} 
+            />
+          </div>
         </div>
       </CardContent>
     </Card>
