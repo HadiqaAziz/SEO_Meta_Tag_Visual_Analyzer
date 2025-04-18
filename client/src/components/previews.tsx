@@ -147,6 +147,11 @@ export default function Previews({ result }: PreviewsProps) {
                   src={twitterImage} 
                   alt="Twitter preview image" 
                   className="w-full h-52 object-cover"
+                  onError={(e) => {
+                    // If image fails to load, replace with placeholder
+                    e.currentTarget.onerror = null; // Prevent infinite callbacks
+                    e.currentTarget.src = defaultImage;
+                  }}
                 />
               ) : (
                 <div className="w-full h-52 bg-gray-200 flex items-center justify-center text-gray-400">
@@ -208,6 +213,11 @@ export default function Previews({ result }: PreviewsProps) {
                     src={ogImage} 
                     alt="LinkedIn preview image" 
                     className="w-full h-52 object-cover"
+                    onError={(e) => {
+                      // If image fails to load, replace with placeholder
+                      e.currentTarget.onerror = null; // Prevent infinite callbacks
+                      e.currentTarget.src = defaultImage;
+                    }}
                   />
                 ) : (
                   <div className="w-full h-52 bg-gray-200 flex items-center justify-center text-gray-400">
